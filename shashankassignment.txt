@@ -1,1 +1,166 @@
-this is my file
+this is my file Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Try the new cross-platform PowerShell https://aka.ms/pscore6
+PS L:\command practice> mkdir assignment
+
+
+    Directory: L:\command practice
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        02-11-2021     15:25                assignment
+
+PS L:\command practice\assignment> mkdir source
+
+
+    Directory: L:\command practice\assignment
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+
+
+    Directory: L:\command practice\assignment
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        02-11-2021     15:25                destination
+
+
+PS L:\command practice\assignment\source> touch abc.txt
+touch : The term 'touch' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was
+verify that the path is correct and try again.
+At line:1 char:1
++ touch abc.txt
++ ~~~~~
+    + CategoryInfo          : ObjectNotFound: (touch:String) [], CommandNotFoundException
+PS L:\command practice\assignment> cp source/abc.txt destination
+PS L:\command practice\assignment> cd source
+PS L:\command practice\assignment\source> ls
+
+
+    Directory: L:\command practice\assignment\source
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+PS L:\command practice> mkdir assignment
+
+
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        02-11-2021     18:30                assignment
+
+
+
+
+    Directory: L:\command practice\assignment
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        02-11-2021     18:31                source
+PS L:\command practice\assignment> mkdir destination
+
+
+    Directory: L:\command practice\assignment
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        02-11-2021     18:31                destination
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02-11-2021     18:32             16 sk.txt
+
+
+PS L:\command practice\assignment\destination> cd source
+cd : Cannot find path 'L:\command practice\assignment\destination\source' because it does not exist.
+At line:1 char:1
++ cd source
+At line:1 char:1
++ source
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (source:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+PS L:\command practice\assignment> cd source
+PS L:\command practice\assignment\source> ls
+    Directory: L:\command practice\assignment\source
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02-11-2021     18:32             16 sk.txt
+
+
+PS L:\command practice\assignment\source> cd ..
+PS L:\command practice\assignment> cd source
+PS L:\command practice\assignment\source> ls
+PS L:\command practice\assignment\source> cd ..
+PS L:\command practice\assignment> cp destination/sk.txt source
+PS L:\command practice\assignment> cd destination
+PS L:\command practice\assignment\destination> ls
+
+
+    Directory: L:\command practice\assignment\destination
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02-11-2021     18:32             16 sk.txt
+
+
+PS L:\command practice\assignment\destination> rmdir sk.txt
+PS L:\command practice\assignment\destination> ls
+PS L:\command practice\assignment\destination> cd ..
+PS L:\command practice\assignment> mv source/sk.txt destination
+PS L:\command practice\assignment> cd source
+PS L:\command practice\assignment\source> ls
+PS L:\command practice\assignment\source> cd ..
+PS L:\command practice\assignment> destination
+destination : The term 'destination' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or  
+if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ destination
++ ~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (destination:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+PS L:\command practice\assignment> cd destination
+PS L:\command practice\assignment\destination> ls
+
+
+    Directory: L:\command practice\assignment\destination
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02-11-2021     18:32             16 sk.txt
+
+
+PS L:\command practice\assignment\destination> grep functionup
+grep : The term 'grep' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was  
+included, verify that the path is correct and try again.
+At line:1 char:1
++ grep functionup
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (grep:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+PS L:\command practice\assignment\destination> grep -i "functionup" sk.txt
+grep : The term 'grep' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was  
+included, verify that the path is correct and try again.
+At line:1 char:1
++ grep -i "functionup" sk.txt
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (grep:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+PS L:\command practice\assignment\destination>
