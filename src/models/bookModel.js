@@ -1,13 +1,18 @@
 const mongoose=require('mongoose')
 
 const bookSchema = new mongoose.Schema({
-    bookName: {type:String,required:true},
-    price: {indianprice:String,europianprice:String },
-    year:{type:Number,default:2021},
-    tags:[String],
-    authorName:String,
-    totalPage:Number,
-    stockAvailable:Boolean
+    
+
+        name:String,
+
+        author_id:{type:Number,required:true},
+
+        price:Number,
+
+        ratings:Number,
+
+    
+    
 }, {timestamps: true} )
 
 
@@ -16,5 +21,5 @@ const bookSchema = new mongoose.Schema({
 
 
 
-module.exports=mongoose.model('new book collection',bookSchema)
+module.exports=mongoose.model('16_nov_collection_one',bookSchema)
 
