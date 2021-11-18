@@ -10,10 +10,9 @@ router.get('/test-me', function (req, res) {
 });
 
 router.post('/createBookUser', Controller.createBookUser );
-router.post('/createauthorUser', Controller.createauthorUser  );
-router.get('/getChetanData',  Controller.getChetanData );
-router.get('/updateTwoStatesPrice',  Controller.updateTwoStatesPrice  );
-router.get('/getAuthorName',  Controller.getAuthorName );
+router.post('/createAuthor', Controller.createAuthor  );
+router.get('/getAllBook',  Controller.getAllBook );
+
 
 
 module.exports = router;
