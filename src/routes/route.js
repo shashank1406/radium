@@ -1,9 +1,9 @@
 const express = require('express');
+
 const router = express.Router();
-const bookModel= require("../models/bookModel")
-const publisherModel= require("../models/publisherModel")
+
 const authorModel= require("../models/authorModel")
-const Controller= require("../controllers/Controller")
+const authorcontroler= require("../controllers/authorcontroler")
 
 
 router.get('/test-me', function (req, res) {
@@ -11,10 +11,9 @@ router.get('/test-me', function (req, res) {
 });
 
 
-router.post('/createAuthor', Controller.createAuthor  );
-router.post('/createpublisher', Controller.createpublisher  )
-router.post('/createBookUser', Controller.createBookUser );
-router.get('/getAllBook',  Controller.getAllBook );
+router.post('/createAuthor', authorcontroler.createAuthor  );
+router.get('/getname', authorcontroler.getname  );
+router.get('/getnameandage', authorcontroler.getnameandage );
 
 
 
