@@ -1,5 +1,5 @@
 const express = require('express');
-const moment = require('moment');
+
 var bodyParser = require('body-parser');
 
 const route = require('./routes/route.js');
@@ -10,25 +10,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-const globelmid=function(req,res,next){
-    const date = moment().format('MMMM Do YYYY, h:mm:ss a');
-    const ipadd = req.ip;
-    const urlpath = req.originalUrl;
-    console.log([date],[ipadd],[urlpath])
-    
-    next()
 
-}
-app.use(globelmid);
 const mongoose = require('mongoose')
-mongoose.connect("mongodb+srv://user-open-to-all:hiPassword123@cluster0.xgk0k.mongodb.net/shashank_shrivastava-database?retryWrites=true&w=majority", {useNewUrlParser: true})
+mongoose.connect("mongodb+srv://monty-python:SnYUEY4giV9rekw@functionup-backend-coho.0zpfv.mongodb.net/shashank_shrivastava_database?retryWrites=true&w=majority", {useNewUrlParser: true})
     .then(() => console.log('mongodb running on 27017'))
     .catch(err => console.log(err))
 
 app.use('/', route);
 
 
-app.use(globelmid);
 
 
 app.listen(process.env.PORT || 3000, function() {

@@ -2,8 +2,12 @@ const express = require('express');
 
 const router = express.Router();
 
-const authorModel= require("../models/authorModel")
-const authorcontroler= require("../controllers/authorcontroler")
+const userModel= require("../models/userModel")
+const productModel= require("../models/productModel")
+const orderModel= require("../models/orderModel")
+const controler = require("../controllers/controller")
+const middleware= require("../middleware/middleware.js")
+
 
 
 router.get('/test-me', function (req, res) {
@@ -11,9 +15,9 @@ router.get('/test-me', function (req, res) {
 });
 
 
-router.post('/createAuthor', authorcontroler.createAuthor  );
-router.get('/getname', authorcontroler.getname  );
-router.get('/getnameandage', authorcontroler.getnameandage );
+router.post('/createUser',middleware.mid ,controler.createUser  );
+router.post('/createProduct', controler.createProduct  );
+router.post('/createorder',middleware.mid , controler.createorder  );
 
 
 
