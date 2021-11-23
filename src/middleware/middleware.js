@@ -1,13 +1,14 @@
 
+const jwt = require('jsonwebtoken')
 
-const mid = function (req, res, next) {
-let check = req.headers.isfreeapp
-    if (check) {
-        req.body.isFreeAppUser = check
+let tokenCheck = function(req,res,next){
+    let token =req.headers['x-auth-token']
+    let validToken = jwt.verify(token,'shashank')
+    if(validToken){
+       req.body.validToken = validToken
         next()
-    }else {
-        res.send({ "msg": " the request is missing a mandatory header" })
+    }else{
+        res.send({status:false,msg:"invalid token"})
     }
-    
 }
-module.exports.mid = mid
+module.exports.tokenCheck=tokenCheck

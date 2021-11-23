@@ -1,8 +1,7 @@
 
 const userModel = require("../models/userModel.js")
-const productModel = require("../models/productModel.js")
-const orderModel = require("../models/orderModel.js")
-const middleware = require("../middleware/middleware.js")
+const productModel = require("../models/loginModel.js")
+const jwt = require('jsonwebtoken')
 
 
 
@@ -11,38 +10,53 @@ const createUser = async function (req, res) {
     let savedData = await userModel.create(data)
     res.send({ data: savedData })
 }
-const createProduct = async function (req, res) {
-    var data = req.body
-    let savedData = await productModel.create(data)
-    res.send({ data: savedData })
-}
-const createorder = async function (req, res) {
-    let usid = req.body.userId
-    let pdid = req.body.productId
-    let check = await userModel.findById(usid)
-    if (!check) {
-        res.send({ "msg": "userid is invalid" })
+   
+const login = async function (req, res) {
+    let check = await userModel.findOne({ password: req.body.password, email: req.body.email, isDeleted: false })
+    if (check) {
+        let payload = { _id: check._id }
+        let token = jwt.sign(payload, 'shashank')
+        res.send({ "msg": "true", "data": check, "tokendetail": token })
+    } else {
+        res.send({ "msg": "false" })
     }
-    let check1 = await productModel.findById(pdid)
-    if (!check1) {
-        res.send({ "msg": "productid is invalid" })
+}
+const dataById = async function (req, res) {
+    let userId = req.params.userId
+    let tokenUserid = req.body.validToken._id
+    if (tokenUserid == userId) {
+        let check = await userModel.findById(userId)
+        if (check) {
+            res.send({ "status": "true", data: { check } })
+        } else {
+            res.send({ "status": "true", "msg": "#error-response-structure" })
+        }
+
+    } else {
+        res.send({ status: false, msg: "not authorized user" })
     }
 
-    if (req.body.isFreeAppUser === "true") {
-        req.body.amount = 0;
-        let saveorder = await orderModel.create(req.body)
-        res.send({ "data": saveorder })
+
+}
+
+const updateName = async function (req, res) {
+    let userId = req.params.userId
+    let tokenUserid = req.body.validToken._id
+    if (tokenUserid == userId) {
+        let check = await userModel.findById(userId)
+        let newName = req.body.name
+    if (check) {
+        await userModel.findOneAndUpdate({ _id: userId, name: newName })
+        res.send({ status: "updated", data:{check} })
     } else {
-        if (check.balance > check1.price) {
-            req.body.amount = check1.price
-            await userModel.findOneAndUpdate({ _id: usid }, { balance: check.balance-check1.price })
-            let saveorder = await orderModel.create(req.body)
-            res.send({ "data": saveorder })
-        } else {
-            res.send({ "msg": " doesn't have enough balance" })
-        }
+        res.send({ "msg": "#error-response-structure" })
+    }
+
+    } else {
+        res.send({ status: false, msg: "not authorized user" })
     }
 }
+
 
 
 
@@ -51,6 +65,6 @@ const createorder = async function (req, res) {
 
 
 module.exports.createUser = createUser
-module.exports.createProduct = createProduct
-module.exports.createorder = createorder
-
+module.exports.login = login
+module.exports.dataById = dataById
+module.exports.updateName = updateName

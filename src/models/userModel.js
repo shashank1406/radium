@@ -1,12 +1,11 @@
 const mongoose=require('mongoose')
 
 const userSchema = new mongoose.Schema({
-       name: String,
-	balance:{type:Number,default:100}, // Default balance at user registration is 100
-	address:String,
-	age: Number,
- 	gender: {type:String,enum:['male','female','other']} ,// Allowed values are - “male”, “female”, “other”
-	freeAppUser: {type:Boolean,default:false} // Default false value
+       name: {type:String,required:true},
+	   mobile:{type:Number,required:true},
+	   email:{type:String,required:true,unique:true},
+	   password:{type:String,required:true},
+	   isDeleted:{type:Boolean,default:false}
 }, {timestamps: true} )
 
-module.exports=mongoose.model('user',userSchema)
+module.exports=mongoose.model('user23nov',userSchema)

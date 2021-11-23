@@ -3,10 +3,10 @@ const express = require('express');
 const router = express.Router();
 
 const userModel= require("../models/userModel")
-const productModel= require("../models/productModel")
-const orderModel= require("../models/orderModel")
+const productModel= require("../models/loginModel")
+
 const controler = require("../controllers/controller")
-const middleware= require("../middleware/middleware.js")
+const middleware = require("../middleware/middleWare")
 
 
 
@@ -15,10 +15,9 @@ router.get('/test-me', function (req, res) {
 });
 
 
-router.post('/createUser',middleware.mid ,controler.createUser  );
-router.post('/createProduct', controler.createProduct  );
-router.post('/createorder',middleware.mid , controler.createorder  );
-
-
+router.post('/createUser' ,controler.createUser  );
+router.post('/login' ,controler.login );
+router.get('/users/:userId', middleware.tokenCheck,controler.dataById );
+router.put('/users/:userId',middleware.tokenCheck ,controler.updateName );
 
 module.exports = router;
