@@ -1,11 +1,8 @@
 const express = require('express');
 
 const router = express.Router();
-
-
-
-const controler = require("../controllers/controller")
-
+const controller = require("../controllers/controller")
+const model = require("../model/cryptoModel")
 
 
 
@@ -14,7 +11,6 @@ router.get('/test-me', function (req, res) {
 });
 
 
-router.get('/londonWeathear' ,controler.londonWeathear  );
-router.get('/londonTemprature' ,controler.londonTemprature  );
-router.get('/sortedTemp' ,controler.sortedTemp  );
+router.get('/coins' ,controller.coins  );
+
 module.exports = router;
