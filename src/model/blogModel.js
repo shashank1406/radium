@@ -28,8 +28,8 @@ const blogSchema = new mongoose.Schema({
         type: Date
     },
     isPublished: {
-        Boolean,
+        type:Boolean,
         default: false
     }
 }, { timestamps: true })
-module.exports = mongoose.model('blog', blogSchema)
+module.exports = mongoose.model('blog project one', blogSchema)
