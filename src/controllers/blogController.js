@@ -6,21 +6,19 @@ const blogModel = require("../model/blogModel")
 // this is the second api where we can create ablog blog
 const createBlogs = async function (req, res) {
   try {
+    if (!(req.body.authorId === req.body.tokenId)) {
+      res.status(400).send({ status: false, msg: "unauthorized access" })
+    }
     let authorid = req.body.authorId
     let date = Date()
     let Author = await authorModel.findById(authorid);
-    // in line no 11 we can check the author id is valid or not 
-    if (Author) {
-      req.body.publishedAt = date;
-      req.body.isPublished = true;
-      // in line no 14/15 we can key value pairs in req.body
-      let createdBlog = await blogModel.create(req.body);
-      // in line no 16 we can create a data in database
-      res.status(201).send({ status: true, data: createdBlog });
-
-    } else {
+    if (!Author) {
       res.status(400).send({ status: false, message: "Author_Id not found" });
     }
+    req.body.publishedAt = date;
+    req.body.isPublished = true;
+    let createdBlog = await blogModel.create(req.body);
+    res.status(201).send({ status: true, data: createdBlog });
   } catch (error) {
     res.status(500).send({ status: false, msg: error });
   }
@@ -30,44 +28,30 @@ const createBlogs = async function (req, res) {
 // (3rd api)that is my third api to get all blogs data and the some codition base data
 const getBlogs = async function (req, res) {
   try {
-    let authorId = req.query.authorId;
-    let category = req.query.category;
-    let tag = req.query.tag;
-    let subcategory = req.query.subcategory;
-    const check = await blogModel.find({ isDeleted: false }, { isPublished: true });
-    if (check) {
-      let result = await blogModel.find({ $or: [{ authorId: authorId }, { tags: tag }, { category: category }, { subcategory: subcategory }] });
-      res.status(200).send({ status: true, data: result });
+    const check = await blogModel.find({ $and: [{ isDeleted: false }, { isPublished: true }] });
+    if (Object.keys(req.query).length === 0) {
+      res.status(200).send({ status: true, data: check });
     }
     else {
-      res.status(200).send({ status: false, msg: "no data exist" });
+      let result = await blogModel.find({ $or: [{ authorId: req.query.authorId }, { tags: req.query.tag }, { category: req.query.category }, { subcategory: req.query.subcategory }] });
+      res.status(200).send({ status: true, data: result });
     }
   } catch (error) {
     res.status(400).send({ status: false, error: error });
   }
 }
-
-
-
 // that is 4th api to update a blog details which is given in the req body
 const updateBlogs = async function (req, res) {
   try {
-    let blogid = req.params.blogId
-    let newTitle = req.body.title
-    let newBody = req.body.body
-    let newTags = req.body.tags
-    let newSubCategory = req.body.subCategory
-    let today = Date();
-    let data = await blogModel.findById(blogid)
-    console.log(data)
-    if (data) {
-      let data = await blogModel.findOneAndUpdate({ _id: blogid }, { title: newTitle, body: newBody, tags: newTags, subCategory: newSubCategory, PublishedAt: today, isPublished: true }, { new: true })
-      res.status(200).send({ msg: "successfully updated", data: data });
+    const data = await blogModel.findById(req.params.blogId)
+    if (!(data.authorId === req.body.tokenId)) {
+      res.status(400).send({ status: false, msg: "unauthorized access" })
     }
-    else {
+    if (!data) {
       res.status(404).send({ msg: "data not found" });
-
     }
+    let data = await blogModel.findOneAndUpdate({ _id: req.params.blogId }, { title: req.body.title, body: req.body.body, tags: req.body.tags, subCategory: req.body.subCategory, PublishedAt: Date(), isPublished: true })
+    res.status(200).send({ msg: "successfully updated", data: data });
   }
   catch (error) {
     res.status(404).send({ status: false, msg: "error-response-status" });
@@ -76,18 +60,16 @@ const updateBlogs = async function (req, res) {
 
 //(5th api) that is my fifth api to delete a data which blog id is given
 const deleteBlogByid = async function (req, res) {
-  const blogId = req.params.blogId
-  let currentDate = Date()
   try {
-    let check = await blogModel.findOne({ _id: blogId, isDeleted: false });
-    if (check) {
-      await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: currentDate });
-
-      res.status(200).send({ status: true, msg: "sucessfully deleted" });
-    } else {
+    const data = await blogModel.findOne({ _id: req.params.blogId, isDeleted: false });
+    if (!(data.authorId === req.body.tokenId)) {
+      res.status(400).send({ status: false, msg: "unauthorized access" })
+    }
+    if (!data) {
       res.status(404).send({ status: false, msg: "blog dosnt exist" });
     }
-
+    await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: Date() });
+    res.status(200).send({ status: true, msg: "sucessfully deleted" });
   } catch (error) {
     res.status(400).send({ status: false, msg: error });
   }
@@ -97,27 +79,22 @@ const deleteBlogByid = async function (req, res) {
 // in updatemany i can use the same condition
 const deleteBlogByQuerConditoin = async function (req, res) {
   try {
-    let authorid = req.query.authorid;
-    let tag = req.query.tag;
-    let subcategory = req.query.subcategory;
-    let isPublished = req.query.isPublished;
-    let check = await blogModel.find({ $or: [{ authorId: authorid }, { tags: tag }, { subcategory: subcategory }, { isPublished: isPublished }] });
-    if (check) {
-      await blogModel.updateMany({ $or: [{ authorId: authorid }, { tags: tag }, { subcategory: subcategory }, { isPublished: isPublished }] }, { isDeleted: true });
-      res.status(200).send({ status: true, msg: "sucessfully deleted" });
-    } else {
+    let check = await blogModel.find({ $or: [{ authorId: req.query.authorid }, { tags: req.query.tag }, { subcategory: req.query.subcategory }, { isPublished: isPublished }] });
+    if (!check) {
       res.ststus(400).send({ status: false, msg: "!No blog found" });
     }
+    await blogModel.updateMany({ $or: [{ authorId: req.query.authorid }, { tags: req.query.tag }, { subcategory: req.query.subcategory }, { isPublished: req.query.isPublished }] }, { isDeleted: true });
+    res.status(200).send({ status: true, msg: "sucessfully deleted" });
   } catch (error) {
     res.status(400).send({ status: false, msg: error });
   }
-
 }
 module.exports.getBlogs = getBlogs;
 module.exports.deleteBlogByid = deleteBlogByid;
 module.exports.deleteBlogByQuerConditoin = deleteBlogByQuerConditoin;
 module.exports.updateBlogs = updateBlogs;
-module.exports.createBlogs = createBlogs
+module.exports.createBlogs = createBlogs;
+
 
 
 
