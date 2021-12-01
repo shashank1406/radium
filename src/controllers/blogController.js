@@ -44,14 +44,16 @@ const getBlogs = async function (req, res) {
 const updateBlogs = async function (req, res) {
   try {
     const data = await blogModel.findById(req.params.blogId)
-    if (!(data.authorId === req.body.tokenId)) {
+    console.log(req.body.tokenId)
+    console.log(data.authorId)
+    if (!(data.authorId == req.body.tokenId)) {
       res.status(400).send({ status: false, msg: "unauthorized access" })
     }
     if (!data) {
       res.status(404).send({ msg: "data not found" });
     }
-    let data = await blogModel.findOneAndUpdate({ _id: req.params.blogId }, { title: req.body.title, body: req.body.body, tags: req.body.tags, subCategory: req.body.subCategory, PublishedAt: Date(), isPublished: true })
-    res.status(200).send({ msg: "successfully updated", data: data });
+    let data1 = await blogModel.findOneAndUpdate({ _id: req.params.blogId }, { title: req.body.title, body: req.body.body, tags: req.body.tags, subCategory: req.body.subCategory, PublishedAt: Date(), isPublished: true })
+    res.status(200).send({ msg: "successfully updated", data: data1 });
   }
   catch (error) {
     res.status(404).send({ status: false, msg: "error-response-status" });
@@ -61,15 +63,16 @@ const updateBlogs = async function (req, res) {
 //(5th api) that is my fifth api to delete a data which blog id is given
 const deleteBlogByid = async function (req, res) {
   try {
-    const data = await blogModel.findOne({ _id: req.params.blogId, isDeleted: false });
-    if (!(data.authorId === req.body.tokenId)) {
-      res.status(400).send({ status: false, msg: "unauthorized access" })
-    }
-    if (!data) {
+    let check = await blogModel.findOne({ _id: req.params.blogId, isDeleted: false });
+    if (!check) {
       res.status(404).send({ status: false, msg: "blog dosnt exist" });
     }
-    await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: Date() });
-    res.status(200).send({ status: true, msg: "sucessfully deleted" });
+    if ((req.body.tokenId == check.authorId)) {
+      await blogModel.findOneAndUpdate({ _id: req.params.blogId, isDeleted: false }, { isDeleted: true, deletedAt: Date() });
+      res.status(200).send({ status: true, msg: "sucessfully deleted" });
+    } else {
+      res.status(400).send({ status: false, msg: "unauthorized access" })
+    }
   } catch (error) {
     res.status(400).send({ status: false, msg: error });
   }
@@ -79,9 +82,9 @@ const deleteBlogByid = async function (req, res) {
 // in updatemany i can use the same condition
 const deleteBlogByQuerConditoin = async function (req, res) {
   try {
-    let check = await blogModel.find({ $or: [{ authorId: req.query.authorid }, { tags: req.query.tag }, { subcategory: req.query.subcategory }, { isPublished: isPublished }] });
+    let check = await blogModel.find({ $or: [{ authorId: req.query.authorid }, { tags: req.query.tag }, { subcategory: req.query.subcategory }, { isPublished: req.query.isPublished }] });
     if (!check) {
-      res.ststus(400).send({ status: false, msg: "!No blog found" });
+      res.status(400).send({ status: false, msg: "!No blog found" });
     }
     await blogModel.updateMany({ $or: [{ authorId: req.query.authorid }, { tags: req.query.tag }, { subcategory: req.query.subcategory }, { isPublished: req.query.isPublished }] }, { isDeleted: true });
     res.status(200).send({ status: true, msg: "sucessfully deleted" });
