@@ -40,7 +40,7 @@ const internCreate = async function (req, res) {
             return res.status(400).send({ status: false, msg: 'enter valid email' })
         }
 
-        let check1 = (requestBody.mobile).split("")
+        let check1 = requestBody.mobile
         let check2 = (/^[0-9]{10}/.test(requestBody.mobile))
         if (!(check1.length === 10 && check2)) {
             return res.status(400).send({ status: false, msg: 'enter valid number' })
