@@ -3,29 +3,29 @@ const mongoose = require('mongoose')
 const internSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        required: 'name is required',
         trim: true
     },
-   email: {
+    email: {
         type: String,
         trim: true,
         lowercase: true,
         unique: true,
         required: 'Email address is required',
     },
-   mobile: {
+    mobile: {
         type: String,
-        required: true,
+        required: 'mobile number is required',
         unique: true
     },
-  collegeId: {
+    collegeId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'collegeSecondProject',
-        required: true
+        ref: 'College',
+        required: 'college id is required',
     },
-  isDeleted: {
+    isDeleted: {
         type: Boolean,
         default: false
     }
 }, { timestamps: true })
-module.exports = mongoose.model('internSecondProject', internSchema)
+module.exports = mongoose.model('intern', internSchema)

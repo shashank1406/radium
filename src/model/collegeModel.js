@@ -9,6 +9,7 @@ const collegeSchema = new mongoose.Schema({
     fullName: {
         type: String,
         required: "Full name is requried",
+        unique: true,
         trim: true
     },
     logoLink: {
@@ -23,4 +24,4 @@ const collegeSchema = new mongoose.Schema({
     }
 
 }, { timestamps: true })
-module.exports = mongoose.model('collegeSecondProject', collegeSchema)
+module.exports = mongoose.model('College', collegeSchema)

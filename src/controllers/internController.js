@@ -10,6 +10,7 @@ const isValid = function (value) {
 const isValidRequestBody = function (requestBody) {
     return Object.keys(requestBody).length > 0
 }
+// =======================================================================================================================================>
 
 
 const internCreate = async function (req, res) {
@@ -62,4 +63,7 @@ const internCreate = async function (req, res) {
         res.status(500).send({ status: false, msg: error })
     }
 }
+
+// ======================================================================================================================================>
+
 module.exports.internCreate = internCreate;
