@@ -52,15 +52,15 @@ const getAllIntern = async function (req, res) {
         if (!collegeName) {
             return res.status(404).send({ status: false, msg: "please provide college name in query params" })
         }
-        let collegeDetail = await collegeModel.findOne({ name: collegeName })
+        let collegeDetail = await collegeModel.findOne({ name: collegeName, isDeleted: false })
         if (!collegeDetail) {
             res.status(404).send({ status: false, msg: "college not found please provide valid college name" })
         }
         // that is one methd fo response structure data in data base
-        let collegeDetail1 = await collegeModel.findOne({ name: collegeName }).select({ name: 1, fullName: 1, logoLink: 1, _id: 0 })
-        let internDetail = await internModel.find({ collegeId: collegeDetail._id }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
+        let collegeDetail1 = await collegeModel.findOne({ name: collegeName, isDeleted: false }).select({ name: 1, fullName: 1, logoLink: 1, _id: 0 })
+        let internDetail = await internModel.find({ collegeId: collegeDetail._id, isDeleted: false }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
         if (internDetail.length === 0) {
-        return res.status(201).send({status: true, msg: {...collegeDetail1.toObject(),interests: "intern Details not present" }})
+            return res.status(201).send({ status: true, msg: { ...collegeDetail1.toObject(), interests: "intern Details not present" } })
         }
         let result = { ...collegeDetail1.toObject(), interests: internDetail }
 

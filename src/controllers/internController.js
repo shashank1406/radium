@@ -51,6 +51,9 @@ const internCreate = async function (req, res) {
         if (!collegeId) {
             return res.status(400).send({ status: false, msg: 'college not found' })
         }
+        if (collegeId.isDeleted === true) {
+            return res.status(400).send({ status: false, msg: "college is deleted" })
+        }
         const createIntern = {
             name: req.body.name,
             email: req.body.email,
