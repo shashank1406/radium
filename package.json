@@ -27,6 +27,8 @@
     "moment": "^2.29.1",
     "mongoose": "^6.0.12",
     "nodemon": "^2.0.15",
+    "randomstring": "^1.2.1",
+    "valid-url": "^1.0.9",
     "validator": "^13.7.0"
   }
 }
