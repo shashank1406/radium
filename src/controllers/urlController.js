@@ -2,6 +2,7 @@ const collegeModel = require("../model/urlModel")
 const validUrl = require('valid-url')
 const randomString = require('randomstring')
 const urlModel = require("../model/urlModel")
+const axios = require('axios')
 
 
 
@@ -33,6 +34,11 @@ const genrateShortUrl = async function (req, res) {
         if (checkUrl) {
             return res.status(400).send({ status: false, msg: `This url already have shortUrl ${checkUrl.shortUrl} ` })
         }
+        try {
+            let reponse = await axios.get(`${requestBody.longUrl}`)
+        } catch (error) {
+            res.status(400).send({ status: false, msg: "this is invalid url" })
+        }
         let urlCode = randomString.generate({ length: 5, charset: 'alphabetic' }).toLowerCase()
         let shortUrl = `http://localhost:3000/${urlCode}`
         requestBody.urlCode = urlCode
@@ -53,9 +59,7 @@ const getUrl = async function (req, res) {
         if (!urlData) {
             return res.status(400).send({ status: false, msg: "this short url does not exist please provide valid url code " })
         }
-        // res.redirect(301, `${urlData.longUrl}`);
-        window.location.href = urlData.longUrl;
-
+        res.redirect(301, `${urlData.longUrl}`);
     } catch (error) {
         res.status(500).send({ status: false, msg: error.message })
     }
