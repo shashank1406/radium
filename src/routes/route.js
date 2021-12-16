@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const urlController = require("../controllers/urlController")
+const bookController = require("../controllers/bookController")
 
 
 
@@ -10,8 +10,10 @@ router.get('/test-me', function (req, res) {
 });
 
 
-router.post('/url/shorten', urlController.genrateShortUrl);
-router.get('/:urlCode', urlController.getUrl);
+router.post('/books', bookController.createBook);
+
+router.get('/books/:bookId', bookController.getBook);
+
 
 
 
