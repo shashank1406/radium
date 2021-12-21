@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/sabihak89/radium#readme",
   "dependencies": {
+    "aws": "0.0.3-2",
+    "aws-sdk": "^2.1047.0",
     "axios": "^0.24.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -28,6 +30,7 @@
     "mongoose": "^6.0.12",
     "multer": "^1.4.4",
     "nodemon": "^2.0.15",
+    "sdk": "^0.5.0",
     "validator": "^13.7.0"
   }
 }

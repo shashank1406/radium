@@ -4,11 +4,14 @@ var bodyParser = require('body-parser');
 
 const route = require('./route/route.js');
 
+var multer =require('multer')
+
 const app = express();
 
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer().any()) 
 
 
 const mongoose = require('mongoose');

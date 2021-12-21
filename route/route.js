@@ -17,6 +17,7 @@ router.post('/login',userController.doLogin)
 
 // ================ books api =========================================================================================//
 
+router.post('/createLink',bookController.createFileLink)
 
 router.post('/books',middleware.authentication,bookController.createBook)
 

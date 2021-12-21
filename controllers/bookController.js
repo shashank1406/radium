@@ -4,6 +4,7 @@ const reviewModel = require('../models/reviewModel')
 const mongoose = require('mongoose')  // change -- add this
 const { findOne, findOneAndUpdate } = require("../models/userModel");
 
+
 // ================================================================================================================================================//
 
 
@@ -24,6 +25,67 @@ const isValidObjectId = function(objectId) { // change -- add this validation to
 
 
 // =================================================================================================================================================================//
+// require aws-sk package for to save file in cloud storeg 
+
+const aws = require("aws-sdk");
+
+// aws s3 credentials that indicates that whewre to uploade a file in aws s3
+
+aws.config.update({
+  accessKeyId: "AKIAY3L35MCRRMC6253G",  
+  secretAccessKey: "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",  
+  region: "ap-south-1" 
+});
+
+// function to add fils in amazone aws s3 in cloud storage  the function has the callback function 
+
+let uploadFile = async (file) => {
+  return new Promise(function (resolve, reject) { 
+    
+    // Create S3 service object
+
+    let s3 = new aws.S3({ apiVersion: "2006-03-01" });
+
+    var uploadParams = {
+      ACL: "public-read", // this file is publically readable
+      Bucket: "classroom-training-bucket", // HERE
+      Key: "pk_newFolder/shashank_project_data" + file.originalname, // HERE    "pk_newFolder/harry-potter.png" pk_newFolder/harry-potter.png
+      Body: file.buffer, 
+    };
+
+    // Callback - function provided as the second parameter ( most oftenly)
+    s3.upload(uploadParams , function (err, data) {
+      if (err) {
+        return reject( { "error": err });
+      }
+      console.log(data)
+      console.log(`File uploaded successfully. ${data.Location}`);
+      return resolve(data.Location); //HERE 
+    });
+  });
+};
+// ========================== api to craete s3 linkl =================================
+
+const createFileLink = async function (req, res) {
+  try {
+    let files = req.files;
+    if (files && files.length > 0) {
+    
+      let uploadedFileURL = await uploadFile( files[0] ); 
+      res.status(201).send({ status: true, data: uploadedFileURL });
+
+    } 
+    else {
+      res.status(400).send({ status: false, msg: "No file to write" });
+    }
+
+  } 
+  catch (e) {
+    console.log("error is: ", e);
+    res.status(500).send({ status: false, msg: "Error in uploading file to s3" });
+  }
+
+};
 
 // ========================== third api to craete book =========================================================================================================// 
 
@@ -74,6 +136,11 @@ const createBook = async function (req, res) {
       res.status(400).send({ status: false, message: ' releasedAt is required' })
       return
     }
+    if (!isValid(requestBody.bookCover)) {
+      res.status(400).send({ status: false, message: 'book cover  is required' })
+      return
+    }
+
 
     if(!(req.validToken._id == requestBody.userId)){
       return res.status(400).send({status:false,message:'unauthorized access'})
@@ -98,6 +165,7 @@ const createBook = async function (req, res) {
     }
 
     requestBody.deletedAt = requestBody.isDeleted === true ? Date() : ''   //null
+   
 
     let savedBook1 = await bookModels.create(requestBody);
 
@@ -318,7 +386,7 @@ const deleteBooksBYId = async function (req, res) {
 
 
 
-
+module.exports.createFileLink = createFileLink;
 module.exports.createBook = createBook;
 module.exports.getBooks = getBooks;
 module.exports.getBooksBYId = getBooksBYId;
